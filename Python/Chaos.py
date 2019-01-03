@@ -5,40 +5,34 @@ class chaos(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
         self.geometry("800x800")
-        self.point1 = [400,0,401,1]
-        self.point2 = [0,799,1,800]
-        self.point3 = [799,799,800,800]
-        self.pointS = [450,125,451,126]
-
-
+        self.startPoints = []
+    
         self.w = tk.Canvas(self,width = 800,height = 800,bg = 'black')
         self.w.pack()
+        self.bind("<Button-1>",self.plotPoint)
+        self.bind ("s", self.start)
 
-        self.w.create_rectangle(self.point1[0],self.point1[1],self.point1[2],self.point1[3],outline = 'white')
-        self.w.create_rectangle(self.point2[0],self.point2[1],self.point2[2],self.point2[3],outline = 'white')
-        self.w.create_rectangle(self.point3[0],self.point3[1],self.point3[2],self.point3[3],outline = 'white')
-        self.w.create_rectangle(self.pointS[0],self.pointS[1],self.pointS[2],self.pointS[3],outline = 'white')
 
+
+    def plotPoint(self,event):
+        self.w.create_rectangle(event.x,event.y,event.x+1,event.y+1,outline = 'white')
+        self.startPoints.append([event.x,event.y])
+
+    
+    def start(self,event):
+        self.pointS = [self.startPoints[-1][0],self.startPoints[-1][1]]
+        self.startPoints.pop()
         self.chaosLoop()
 
+
+
     def chaosPoint(self):
-        i = random.randint(1,4)
-        if i == 1:
-            self.pointS[0] = (self.pointS[0] + self.point1[0])/2
-            self.pointS[1] = (self.pointS[1] + self.point1[1])/2
-            self.pointS[2] = (self.pointS[2] + self.point1[2])/2
-            self.pointS[3] = (self.pointS[3] + self.point1[3])/2
-        if i == 2:
-            self.pointS[0] = (self.pointS[0] + self.point2[0])/2
-            self.pointS[1] = (self.pointS[1] + self.point2[1])/2
-            self.pointS[2] = (self.pointS[2] + self.point2[2])/2
-            self.pointS[3] = (self.pointS[3] + self.point2[3])/2
-        if i == 3:
-            self.pointS[0] = (self.pointS[0] + self.point3[0])/2
-            self.pointS[1] = (self.pointS[1] + self.point3[1])/2
-            self.pointS[2] = (self.pointS[2] + self.point3[2])/2
-            self.pointS[3] = (self.pointS[3] + self.point3[3])/2
-        self.w.create_rectangle(self.pointS[0],self.pointS[1],self.pointS[2],self.pointS[3],outline = 'white')
+        i = random.randint(0,len(self.startPoints)-1)
+
+        self.pointS[0] = (self.pointS[0] + self.startPoints[i][0])/2
+        self.pointS[1] = (self.pointS[1] + self.startPoints[i][1])/2
+        self.w.create_rectangle(self.pointS[0],self.pointS[1],self.pointS[0]+1,self.pointS[1]+1,outline = 'white')
+        
     
 
 
