@@ -1,9 +1,11 @@
 import tkinter as tk
 import random
+import sys
 
 class chaos(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
+        self.title("Chaos Game")
         self.geometry("800x800")
         self.startPoints = []
     
@@ -11,6 +13,7 @@ class chaos(tk.Tk):
         self.w.pack()
         self.bind("<Button-1>",self.plotPoint)
         self.bind ("s", self.start)
+        self.bind("<Escape>", self.close)
 
 
 
@@ -20,6 +23,7 @@ class chaos(tk.Tk):
 
     
     def start(self,event):
+        self.unbind("<Button-1>")
         self.pointS = [self.startPoints[-1][0],self.startPoints[-1][1]]
         self.startPoints.pop()
         self.chaosLoop()
@@ -33,8 +37,9 @@ class chaos(tk.Tk):
         self.pointS[1] = (self.pointS[1] + self.startPoints[i][1])/2
         self.w.create_rectangle(self.pointS[0],self.pointS[1],self.pointS[0]+1,self.pointS[1]+1,outline = 'white')
         
-    
 
+    def close(self,event):
+        sys.exit()
 
 
     def chaosLoop(self):
