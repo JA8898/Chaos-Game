@@ -15,6 +15,7 @@ class chaos(tk.Tk):
         self.bind("<Button-1>",self.plotPoint)
         self.bind ("s", self.start)
         self.bind("<Escape>", self.close)
+        self.bind("r",self.reset)
 
 
 
@@ -26,6 +27,7 @@ class chaos(tk.Tk):
     def start(self,event):
         self.unbind("<Button-1>")
         self.pointS = [self.startPoints[-1][0],self.startPoints[-1][1]]
+        self.running = True
         self.startPoints.pop()
         self.chaosLoop()
 
@@ -53,13 +55,23 @@ class chaos(tk.Tk):
             self.chaosPoint(i)
 
 
+    def reset(self,event):
+        self.running = False
+        self.w.delete("all")
+        self.startPoints = []
+        self.lastPoints = []
+        self.bind("<Button-1>",self.plotPoint)
+        
 
     def chaosLoop(self):
-        self.after(1,self.chaosLoop)
+        if self.running == True:
+            self.after(1,self.chaosLoop)
         if len(self.startPoints) > 3:
-            self.rules()
+            if len(self.startPoints) > 0:
+                self.rules()
         else:
-            self.chaosPoint(random.randint(0,len(self.startPoints)-1))
+            if len(self.startPoints) > 0:
+                self.chaosPoint(random.randint(0,len(self.startPoints)-1))
 
     
 if __name__ == "__main__":
