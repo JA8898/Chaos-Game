@@ -8,6 +8,7 @@ class chaos(tk.Tk):
         self.title("Chaos Game")
         self.geometry("800x800")
         self.startPoints = []
+        self.lastPoints = []
     
         self.w = tk.Canvas(self,width = 800,height = 800,bg = 'black')
         self.w.pack()
@@ -30,9 +31,7 @@ class chaos(tk.Tk):
 
 
 
-    def chaosPoint(self):
-        i = random.randint(0,len(self.startPoints)-1)
-
+    def chaosPoint(self,i):          
         self.pointS[0] = (self.pointS[0] + self.startPoints[i][0])/2
         self.pointS[1] = (self.pointS[1] + self.startPoints[i][1])/2
         self.w.create_rectangle(self.pointS[0],self.pointS[1],self.pointS[0]+1,self.pointS[1]+1,outline = 'white')
@@ -41,10 +40,26 @@ class chaos(tk.Tk):
     def close(self,event):
         sys.exit()
 
+    def rules(self):
+        i = random.randint(0,len(self.startPoints)-1)
+        violation = False
+        for point in self.lastPoints:
+            if i == point:
+                violation = True
+        if not violation:
+            self.lastPoints.append(i)
+            if len(self.lastPoints) > (len(self.startPoints) - 3):
+                self.lastPoints.pop(0)
+            self.chaosPoint(i)
+
+
 
     def chaosLoop(self):
         self.after(1,self.chaosLoop)
-        self.chaosPoint()
+        if len(self.startPoints) > 3:
+            self.rules()
+        else:
+            self.chaosPoint(random.randint(0,len(self.startPoints)-1))
 
     
 if __name__ == "__main__":
